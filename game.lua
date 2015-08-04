@@ -90,6 +90,8 @@ function GameScene:enterEnd()
 	--self:drawHUD()
 	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame, self)
 	self:addEventListener(Event.MOUSE_DOWN, self.onMouseDown, self)
+	self:addEventListener(Event.MOUSE_MOVE, self.onMouseDown, self)
+	self:addEventListener(Event.MOUSE_UP, self.onMouseUp, self)
 	--self.world:addEventListener(Event.BEGIN_CONTACT, self.onBeginContact, self)
 	
 end
@@ -166,6 +168,17 @@ function GameScene:onEnterFrame()
 	end
 	]]--
 	
+	-- Moving paddle smoothly
+	local target = self.target
+	local paddle = self.paddle
+	if (paddle:getX() < target.x) then
+		paddle:move(5)
+		self:publish_private(5)
+	elseif (paddle:getX() > target.x) then
+		paddle:move(-5)
+		self:publish_private(-5)
+	end
+	
 	--print("update ball")
 	local ball = self.ball
 	ball:update()
@@ -173,23 +186,16 @@ function GameScene:onEnterFrame()
 	
 end
 
+-- Click on the screen
 function GameScene:onMouseDown(event)
 	
-	self.moving = true
-	
-	local paddle = self.paddle
-	if (paddle:getX() < event.x) then
-		paddle:move(5)
-		self:publish_private(5)
-	elseif (paddle:getX() > event.x) then
-		paddle:move(-5)
-		self:publish_private(-5)
-	end
-		
+	self.target = event
+			
 end
 
+-- Stop clicking on the screen
 function GameScene:onMouseUp(event)
-	self.moving = false
+	self.target = nil
 end
 
 -- Subscribe to private channel
