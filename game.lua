@@ -38,9 +38,8 @@ function GameScene:init(data)
 	print(json.encode(data))
 	
 	if (data) then
-		self.userid = data.userid
-		self.color = data.color
-		self.remote_userid = data.remote_userid
+		self.channel = data.channel
+		self.playerid = data.playerid
 	end
 	
 	
@@ -52,17 +51,17 @@ function GameScene:init(data)
 	self.players = {} -- Two players
 	local config = {type = "static"}
 	
-	local paddle_one = Paddle.new(self, Paddle.PLAYER_ONE)
+	local paddle_one = Paddle.new(self, RoomScene.PLAYER_ONE)
 	paddle_one:setPosition(150, 30)
 	self:addChild(paddle_one)
 	self.players[1] = paddle_one
 	
-	local paddle_two = Paddle.new(self, Paddle.PLAYER_TWO)
+	local paddle_two = Paddle.new(self, RoomScene.PLAYER_TWO)
 	paddle_two:setPosition(200, height - paddle_two:getHeight() - 30)
 	self:addChild(paddle_two)
 	self.players[2] = paddle_two
 	
-	if (self.color == Paddle.PLAYER_ONE) then
+	if (self.playerid == RoomScene.PLAYER_ONE) then
 		self.paddle = self.players[1]
 		self.paddle2 = self.players[2]
 	else
@@ -79,7 +78,7 @@ function GameScene:enterEnd()
 	self.paused = false
 	
 	self:draw_border()
-	self:subscribe_private(self.remote_userid)
+	self:subscribe_private(self.channel)
 	
 	accelerometer:start()
 	
@@ -201,15 +200,13 @@ function GameScene:onMouseUp(event)
 end
 
 -- Subscribe to private channel
-function GameScene:subscribe_private(userid)
+function GameScene:subscribe_private(channel)
 
-	print("private channel", userid)
+	print("private channel", channel)
 	
 	hub:subscribe({
-        --channel = userid;
-		channel = "prueba",
+		channel = channel,
         callback = function(message)  
-                --print("private message received  = "..json.encode(message)); 
 				
 				self:consume_message(message)
 				
@@ -222,7 +219,7 @@ function GameScene:publish_private(x)
 	hub:publish({
 					message = {
 							action  =  "moving",
-							userid = self.userid,
+							playerid = self.playerid,
 							x = x
 						}
 					});
@@ -233,11 +230,8 @@ function GameScene:consume_message(message)
 
 	--print(json.encode(message))
 	if (message and message.action == "moving") then
-		
-		--print(message.userid, self.userid)
-		
-		if (not (self.userid  == message.userid)) then
-			--print("here", message.x)
+				
+		if (not (self.playerid  == message.playerid)) then
 			self.paddle2:move(message.x)
 		end
 	end

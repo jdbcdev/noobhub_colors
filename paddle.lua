@@ -1,19 +1,16 @@
 
 Paddle = Core.class(Sprite)
 
-Paddle.PLAYER_ONE = 0xff0000
-Paddle.PLAYER_TWO = 0x0000ff
-
 local width = application:getContentWidth()
 
 -- Constructor
-function Paddle:init(scene, color)
+function Paddle:init(scene, playerid)
 	self:setAnchorPoint(0.5, 0.5)
 	
-	print("color", color)
+	--print("color", color)
 	
 	local child
-	if (color == Paddle.PLAYER_ONE) then
+	if (color == RoomScene.PLAYER_ONE) then
 		child = Bitmap.new("images/paddle_red.png")
 	else
 		child = Bitmap.new("images/paddle_brillant.png")

@@ -4,9 +4,11 @@ RoomScene = Core.class(Sprite)
 local SERVER_HOST = "192.168.1.10"
 local SERVER_PORT = 1337
 
+RoomScene.PLAYER_ONE = 1
+RoomScene.PLAYER_TWO = 2
+
 -- Constructor
 function RoomScene:init()
-	self.userid = md5(  math.floor(os.timer() * 1000) ..  math.random()) -- Userid used to create the private channel
 		
 	hub = noobhub.new({ server = SERVER_HOST; port = SERVER_PORT; });
 	self:subscribe_public()
@@ -28,16 +30,17 @@ function RoomScene:first_message()
 
 	local timer = Timer.new(1000, 1)
 	timer:addEventListener(Event.TIMER,  function()
-	
-	if (not self.color) then
 		
-		self.color = Paddle.PLAYER_ONE -- RED
+	if (not self.playerid) then
+		
+		local channel = md5(  math.floor(os.timer() * 1000) ..  math.random())
+		self.playerid = RoomScene.PLAYER_ONE
 		
 		hub:publish({
 				message = {
 							action  =  "ping",
-							userid = self.userid,
-							color = self.color
+							playerid = self.playerid,
+							channel = channel
 					}
 		});
 	end
@@ -46,91 +49,47 @@ end);
 timer:start()
 end
 
--- Subscribe to public channel looking for available player
+-- Subscribe to public channel looking for Player 2
 function RoomScene:subscribe_public()
-
-	local userid = self.userid
 	
 	hub:subscribe({
         channel = "public";
         callback = function(message)  
                 print("public message received  = "..json.encode(message)); 
+												
+				local message_playerid = message.playerid
+				print(message_playerid, self.playerid)
 				
-				local message_userid = message.userid -- Message userid
-				if (userid and (not (userid == message_userid))) then
-				
-					local color = message.color
-					if (not color) then
-						self.color = Paddle.PLAYER_TWO
-					end
+				if (message_playerid == self.playerid) then
+					print("This is my message. Ignoring message")
+				else
+					local channel = message.channel
 					
-					-- userid is remote
-					self.remote_userid = message_userid
+					print("por aqui")
+										
+					if (not self.playerid) then
+						self.playerid = RoomScene.PLAYER_TWO
+					end
 					
 					-- Publish again to provide local userid
 					hub:publish({
 					message = {
 							action  =  "ping",
-							userid = userid
+							playerid = self.playerid,
+							channel = channel
 						}
 					});
 					
 					hub:unsubscribe() -- Unsubscribe from public channel
-					--self:subscribe_private(message_userid)
 					
-					--self.text:setText("Remote Player ".. message_userid)
-					application:setBackgroundColor(self.color)
+					--application:setBackgroundColor(self.color)
 					sceneManager:changeScene(scenes[2], 
 										1, 
 										SceneManager.crossfade, 
 										easing.linear, 
-										{userData = {color = self.color, remote_userid = self.remote_userid, userid = self.userid} 
+										{userData = {playerid = self.playerid, channel = channel} 
 										})
-					
-					-- Ready to play
-					--self:publish_ready()
-				else
-					print("Ignoring message")
 				end
         end;
 	})
-end
-
--- Subscribe to private channel
---[[
-function RoomScene:subscribe_private(userid)
-	hub:subscribe({
-        channel = userid;
-        callback = function(message)  
-                --print("private message received  = "..json.encode(message)); 
-				
-				if (self.consume_message) then
-					self:consume_message(message)
-				end
-				
-        end;
-	})
-end
-]]--
-
--- Publish to private channel
-function RoomScene:publish_ready()
-	hub:publish({
-					message = {
-							action  =  "ready",
-							userid = self.userid
-						}
-					});
-end
-
-function RoomScene:consume_message(message)
-
-	if (message and message.action == "ready") then
-		sceneManager:changeScene(scenes[2], 
-										1, 
-										SceneManager.crossfade, 
-										easing.linear, 
-										{userData = {userid = userid, color = self.color, remote_userid = self.remote_userid} 
-										})
-	end
 end
