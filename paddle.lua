@@ -28,7 +28,7 @@ end
 
 -- Move paddle to right or left
 function Paddle:move(x)
-	local posX = self:getX() + x * 15
+	local posX = self:getX() + x
 	if (posX - self:getWidth() * 0.5 > 10 and posX < width - 10 - self:getWidth() * 0.5) then
 		self:setX(posX)
 	end

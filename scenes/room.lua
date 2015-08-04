@@ -79,7 +79,7 @@ function RoomScene:subscribe_public()
 					--self:subscribe_private(message_userid)
 					
 					--self.text:setText("Remote Player ".. message_userid)
-					
+					application:setBackgroundColor(self.color)
 					sceneManager:changeScene(scenes[2], 
 										1, 
 										SceneManager.crossfade, 
