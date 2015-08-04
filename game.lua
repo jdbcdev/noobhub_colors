@@ -87,6 +87,7 @@ function GameScene:enterEnd()
 	
 	--self:drawHUD()
 	self:addEventListener(Event.ENTER_FRAME, self.onEnterFrame, self)
+	self:addEventListener(Event.MOUSE_DOWN, self.onMouseDown, self)
 	--self.world:addEventListener(Event.BEGIN_CONTACT, self.onBeginContact, self)
 	
 end
@@ -165,6 +166,19 @@ function GameScene:onEnterFrame()
 	local ball = self.ball
 	ball:update()
 	--self.world:update()
+	
+end
+
+function GameScene:onMouseDown(event)
+	
+	local paddle = self.paddle
+	if (paddle:getX() < event.x) then
+		paddle:move(5)
+		self:publish_private(5)
+	elseif (paddle:getX() > event.x) then
+		paddle:move(-5)
+		self:publish_private(5)
+	end
 	
 end
 
