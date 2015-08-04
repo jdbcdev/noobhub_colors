@@ -217,10 +217,10 @@ function GameScene:consume_message(message)
 
 	--print(json.encode(message))
 	if (message and message.action == "moving") then
-		if (not (self.remote_userid == message.userid)) then
-			print("here")
+		--if (not (self.userid == message.userid)) then
+			--print("here")
 			self.paddle2:move(message.x)
-		end
+		--end
 	end
 end
 
