@@ -28,7 +28,7 @@ end
 -- Publish first message (I am here)
 function RoomScene:first_message()
 
-	local timer = Timer.new(1000, 1)
+	local timer = Timer.new(10000, 1)
 	timer:addEventListener(Event.TIMER,  function()
 		
 	if (not self.playerid) then

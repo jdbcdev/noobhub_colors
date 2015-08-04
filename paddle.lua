@@ -10,7 +10,7 @@ function Paddle:init(scene, playerid)
 	--print("color", color)
 	
 	local child
-	if (color == RoomScene.PLAYER_ONE) then
+	if (playerid == RoomScene.PLAYER_ONE) then
 		child = Bitmap.new("images/paddle_red.png")
 	else
 		child = Bitmap.new("images/paddle_brillant.png")
