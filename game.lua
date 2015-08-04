@@ -158,10 +158,23 @@ function GameScene:onEnterFrame()
 	
 	self.world:step(1/60, 8, 3)
 	
+	--[[
 	local x,y,z = application:getAccelerometer()
 	if (not (x == 0)) then
 		self.paddle:move(x)
 		self:publish_private(x)
+	end
+	]]--
+	
+	if (self.moving) then
+		local paddle = self.paddle
+		if (paddle:getX() < event.x) then
+			paddle:move(5)
+			self:publish_private(5)
+		elseif (paddle:getX() > event.x) then
+			paddle:move(-5)
+			self:publish_private(5)
+		end
 	end
 	
 	--print("update ball")
@@ -173,15 +186,12 @@ end
 
 function GameScene:onMouseDown(event)
 	
-	local paddle = self.paddle
-	if (paddle:getX() < event.x) then
-		paddle:move(5)
-		self:publish_private(5)
-	elseif (paddle:getX() > event.x) then
-		paddle:move(-5)
-		self:publish_private(5)
-	end
-	
+	self.moving = true
+		
+end
+
+function GameScene:onMouseUp(event)
+	self.moving = false
 end
 
 -- Subscribe to private channel
