@@ -188,7 +188,8 @@ function GameScene:subscribe_private(userid)
 	print("private channel", userid)
 	
 	hub:subscribe({
-        channel = userid;
+        --channel = userid;
+		channel = "prueba"
         callback = function(message)  
                 --print("private message received  = "..json.encode(message)); 
 				
