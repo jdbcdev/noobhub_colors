@@ -52,6 +52,8 @@ end
 -- Subscribe to public channel looking for Player 2
 function RoomScene:subscribe_public()
 	
+	print("subscribe public")
+	
 	hub:subscribe({
         channel = "public";
         callback = function(message)  
