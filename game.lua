@@ -170,13 +170,15 @@ function GameScene:onEnterFrame()
 	
 	-- Moving paddle smoothly
 	local target = self.target
-	local paddle = self.paddle
-	if (paddle:getX() < target.x) then
-		paddle:move(5)
-		self:publish_private(5)
-	elseif (paddle:getX() > target.x) then
-		paddle:move(-5)
-		self:publish_private(-5)
+	if (target) then
+		local paddle = self.paddle
+		if (paddle:getX() < target.x) then
+			paddle:move(5)
+			self:publish_private(5)
+		elseif (paddle:getX() > target.x) then
+			paddle:move(-5)
+			self:publish_private(-5)
+		end
 	end
 	
 	--print("update ball")
