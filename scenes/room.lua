@@ -84,7 +84,7 @@ function RoomScene:subscribe_public()
 										1, 
 										SceneManager.crossfade, 
 										easing.linear, 
-										{userData = {color = self.color, remote_userid = self.remote_userid} 
+										{userData = {color = self.color, remote_userid = self.remote_userid, userid = self.userid} 
 										})
 					
 					-- Ready to play

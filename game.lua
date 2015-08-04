@@ -21,6 +21,7 @@ local function create_rect(color, width, height)
 	return shape
 end
 
+--[[
 -- Create a circle shape
 local function create_circle(color, size)
 	local shape = Shape.new()
@@ -29,11 +30,12 @@ local function create_circle(color, size)
 	
 	return shape
 end
+]]--
 
 -- Constructor
 function GameScene:init(data)
 	
-	--print(json.encode(data))
+	print(json.encode(data))
 	
 	if (data) then
 		self.userid = data.userid
