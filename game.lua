@@ -193,9 +193,7 @@ function GameScene:subscribe_private(userid)
         callback = function(message)  
                 --print("private message received  = "..json.encode(message)); 
 				
-				if (self.consume_message) then
-					self:consume_message(message)
-				end
+				self:consume_message(message)
 				
         end;
 	})
@@ -215,6 +213,7 @@ end
 -- Consume 'moving' message
 function GameScene:consume_message(message)
 
+	print(json.encode(message)
 	if (message and message.action == "moving") then
 		if (not (self.userid == message.userid)) then
 			self.paddle2:move(message.x)
