@@ -183,7 +183,7 @@ function GameScene:onMouseDown(event)
 		self:publish_private(5)
 	elseif (paddle:getX() > event.x) then
 		paddle:move(-5)
-		self:publish_private(5)
+		self:publish_private(-5)
 	end
 		
 end
@@ -215,7 +215,7 @@ function GameScene:publish_private(x)
 					message = {
 							action  =  "moving",
 							userid = self.userid,
-							x = x * 15
+							x = x
 						}
 					});
 end
