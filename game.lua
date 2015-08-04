@@ -166,17 +166,6 @@ function GameScene:onEnterFrame()
 	end
 	]]--
 	
-	if (self.moving) then
-		local paddle = self.paddle
-		if (paddle:getX() < event.x) then
-			paddle:move(5)
-			self:publish_private(5)
-		elseif (paddle:getX() > event.x) then
-			paddle:move(-5)
-			self:publish_private(5)
-		end
-	end
-	
 	--print("update ball")
 	local ball = self.ball
 	ball:update()
@@ -187,6 +176,15 @@ end
 function GameScene:onMouseDown(event)
 	
 	self.moving = true
+	
+	local paddle = self.paddle
+	if (paddle:getX() < event.x) then
+		paddle:move(5)
+		self:publish_private(5)
+	elseif (paddle:getX() > event.x) then
+		paddle:move(-5)
+		self:publish_private(5)
+	end
 		
 end
 
