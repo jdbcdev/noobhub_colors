@@ -171,10 +171,10 @@ function GameScene:onEnterFrame()
 	local target = self.target
 	if (target) then
 		local paddle = self.paddle
-		if (paddle:getX() < target.x) then
+		if (paddle:getX() - paddle:getWidth() * 0.5 < target.x) then
 			paddle:move(5)
 			self:publish_private(5)
-		elseif (paddle:getX() > target.x) then
+		elseif (paddle:getX() - paddle:getWidth() * 0.5 > target.x) then
 			paddle:move(-5)
 			self:publish_private(-5)
 		end
