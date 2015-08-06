@@ -28,22 +28,23 @@ end
 -- Publish first message (I am here)
 function RoomScene:first_message()
 
-	local timer = Timer.new(10000, 1)
+	local timer = Timer.new(1000, 1)
 	timer:addEventListener(Event.TIMER,  function()
 		
 	if (not self.playerid) then
-		
-		local channel = md5(  math.floor(os.timer() * 1000) ..  math.random())
 		self.playerid = RoomScene.PLAYER_ONE
-		
-		hub:publish({
-				message = {
-							action  =  "ping",
-							playerid = self.playerid,
-							channel = channel
-					}
-		});
+		self.channel = md5(  math.floor(os.timer() * 1000) ..  math.random())
 	end
+		
+	self.playerid = RoomScene.PLAYER_ONE
+		
+	hub:publish({
+			message = {
+						action  =  "ping",
+						playerid = self.playerid,
+						channel = self.channel
+				}
+	});
 		
 end);
 timer:start()
@@ -64,6 +65,7 @@ function RoomScene:subscribe_public()
 				
 				if (message_playerid == self.playerid) then
 					print("This is my message. Ignoring message")
+					self:first_message()
 				else
 					local channel = message.channel
 					
